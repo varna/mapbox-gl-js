@@ -10,6 +10,15 @@ varying vec2 v_pos0;
 varying float v_fog_opacity;
 #endif
 
+#ifdef RECEIVE_SHADOWS
+uniform mat4 u_light_matrix_0;
+uniform mat4 u_light_matrix_1;
+
+varying vec4 v_pos_light_view_0;
+varying vec4 v_pos_light_view_1;
+varying float v_depth;
+#endif
+
 const float skirtOffset = 24575.0;
 const float wireframeOffset = 0.00015;
 
@@ -25,5 +34,11 @@ void main() {
 
 #ifdef FOG
     v_fog_opacity = fog(fog_position(vec3(decodedPos, elevation)));
+#endif
+
+#ifdef RECEIVE_SHADOWS
+    v_pos_light_view_0 = u_light_matrix_0 * vec4(decodedPos, elevation, 1.0);
+    v_pos_light_view_1 = u_light_matrix_1 * vec4(decodedPos, elevation, 1.0);
+    v_depth = gl_Position.w;
 #endif
 }
